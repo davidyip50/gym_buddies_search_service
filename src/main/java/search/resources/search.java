@@ -88,16 +88,16 @@ public class search {
     }
 
     private Response searchUser(SearchGymbuddyRequestModel requestModel) throws SQLException {
-        String query = "SELECT u.email, u.gym, u.location, u.fitness, u.biography, u.music\n" +
-                "FROM gymdb.users as u, gymdb.gym as g, gymdb.fitness as f\n" +
-                "WHERE u.gym = g.name AND f.type = u.fitness AND u.location like ? AND  (? is NULL OR ? LIKE g.name)  AND (? is NULL OR ? LIKE f.type)\n" +
-                "LIMIT ? OFFSET ?";
+        String query = "SELECT email, location, gym, biography, fitness, music\n\n" +
+                "FROM gymdb.users as u\n" +
+                "WHERE u.location like ? AND  (? is NULL OR ? LIKE u.gym)  AND (? is NULL OR ? LIKE u.fitness)\n" +
+                "LIMIT ? OFFSET ?;";
 
         PreparedStatement ps = MovieService.getCon().prepareStatement(query);
 
         ps.setString(1,requestModel.getLocation());
-        ps.setString(2,null);
-        ps.setString(3,null);
+        ps.setString(2,requestModel.getGym());
+        ps.setString(3,requestModel.getGym());
 
         ps.setString(4, requestModel.getFitness());
         ps.setString(5, requestModel.getFitness());
